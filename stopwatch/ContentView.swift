@@ -10,7 +10,7 @@ import SwiftUI
 struct ContentView: View {
     var body: some View {
         ZStack {
-            Color.accentColor
+            Color.white
                 .edgesIgnoringSafeArea(.all)
             VStack {
                 Text("Welcome to your stopwatch")
@@ -25,27 +25,50 @@ struct ContentView: View {
                     .font(.system(size: 40, weight: .bold))
                 Spacer()
                 HStack {
-                    Text("Start")
-                        .padding()
-                        .font(.system(size: 24, weight: .bold))
-                        .background(Color.green)
-                        .cornerRadius(10)
-                    Text("Reset")
-                        .padding()
-                        .font(.system(size: 24, weight: .bold))
-                        .background(Color.red)
-                        .cornerRadius(10)
-                    Text("Lap")
-                        .padding()
-                        .font(.system(size: 24, weight: .bold))
-                        .background(Color.orange)
-                        .cornerRadius(10)
+                    Spacer()
+                    Button {
+                        print("start")
+                    } label: {
+                        Text("Start")
+                            .padding()
+                            .font(.headline)
+                            .background(Color.green)
+                            .foregroundColor(.black)
+                            .cornerRadius(10)
+                    }
+                    Spacer()
+                    Button {
+                        print("reset")
+                    } label: {
+                        Text("Reset")
+                            .padding()
+                            .font(.headline)
+                            .background(Color.red)
+                            .foregroundColor(.black)
+                            .cornerRadius(10)
+                    }
+                    Spacer()
+                    Button {
+                        print("lap")
+                    } label: {
+                        Text("Lap")
+                            .padding()
+                            .font(.headline)
+                            .background(Color.orange)
+                            .foregroundColor(.black)
+                            .cornerRadius(10)
+                    }
+                    Spacer()
+                    
+
+    
                 }
                 Spacer()
             }
+        
         }
-        
-        
+//
+//
     }
 }
 
