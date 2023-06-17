@@ -1,16 +1,11 @@
-//
-//  ContentView.swift
-//  stopwatch
-//
 //  Created by Shelley Timmins on 15/06/2023.
-//
-
 import SwiftUI
 
 struct ContentView: View {
     // @State allows us to update the property and UI is updated whenever the state changes
-    @State var runningTime = false
-    @State var timeElapsed: TimeInterval = 0.0
+    @State private var runningTime = false
+    @State private var timeElapsed: TimeInterval = 0.0
+    @State private var lapArray: [String] = []
     // on: is the scheduler for when this occurs
     // .main is the main loop scheduler - this updates the ui when changes happen
     // in: is the mode or quality of service level of priority/behaviour
@@ -31,7 +26,7 @@ struct ContentView: View {
                     .font(.system(size: 24, weight: .bold))
                 Spacer()
                 Text(formatTimeInterval(timeElapsed))
-                    // modifer that picks up any changes from a publisher
+                // modifer that picks up any changes from a publisher
                     .onReceive(timer) { _ in
                         if runningTime {
                             timeElapsed += 0.1
@@ -73,7 +68,9 @@ struct ContentView: View {
                     if runningTime {
                         Button {
                             print("lap")
-                            // save the exact time when pressed
+                            // save the exact time when pressed and add to lap array
+                            let lapTime = formatTimeInterval(timeElapsed)
+                            lapArray.append(lapTime)
                             // show time with lap number under
                         } label: {
                             Text("Lap")
@@ -89,6 +86,7 @@ struct ContentView: View {
                             // Stop the timeElapsed
                             // Set stopwatch back to 0
                             timeElapsed = 0.0
+                            lapArray = []
                         } label: {
                             Text("Reset")
                                 .padding()
@@ -100,7 +98,21 @@ struct ContentView: View {
                     }
                     Spacer()
                 }
-                Spacer()
+                .padding(.bottom, 10)
+                
+                List {
+                    // need to add enumerated() to allow access to the index
+                    ForEach(Array(lapArray.enumerated()), id: \.1) { index, lap in
+                        HStack {
+                            Spacer()
+                            Text("Lap \(index + 1)")
+                            Spacer()
+                            Text(lap)
+                            Spacer()
+                        }
+                    }
+                }
+                
             }
         }
     }
