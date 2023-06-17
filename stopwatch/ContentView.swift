@@ -9,7 +9,7 @@ import SwiftUI
 
 struct ContentView: View {
     // @State allows us to update the property and UI is updated whenever the state changes
-    @State var runningTime = true
+    @State var runningTime = false
     @State var timeElapsed: TimeInterval = 0.0
     // on: is the scheduler for when this occurs
     // .main is the main loop scheduler - this updates the ui when changes happen
@@ -30,7 +30,7 @@ struct ContentView: View {
                     .frame(maxWidth: .infinity, alignment: .top)
                     .font(.system(size: 24, weight: .bold))
                 Spacer()
-                Text(formatTimeInterval(timeElapsed) ?? "")
+                Text(formatTimeInterval(timeElapsed))
                     // modifer that picks up any changes from a publisher
                     .onReceive(timer) { _ in
                         if runningTime {
@@ -106,12 +106,17 @@ struct ContentView: View {
     }
     
     // using the _ means you don't have to name the parameter when you call it
-    func formatTimeInterval(_ interval: TimeInterval) -> String? {
+    func formatTimeInterval(_ interval: TimeInterval) -> String {
+        // formatter doesn't suppoer ms so need to calc manually
+        // can't use % on decimals so need truncatingRemainder
+        let milliseconds = Int((interval.truncatingRemainder(dividingBy: 1)) * 100)
         let formatter = DateComponentsFormatter()
         formatter.allowedUnits = [.hour, .minute, .second]
+        // adds leading zeros so the format is consistent
         formatter.zeroFormattingBehavior = .pad
         
-        return formatter.string(from: interval)
+        // return the time plus manually calc ms
+        return formatter.string(from: interval)! + String(format: ":%02d", milliseconds)
     }
 }
 
