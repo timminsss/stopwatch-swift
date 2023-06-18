@@ -12,9 +12,9 @@ struct stopwatchApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
-                .sheet(isPresented: .constant(false)) {
-                    TimerView()
-                }
+//                .sheet(isPresented: .constant(false)) {
+//                    TimerView()
+//                }
         }
     }
 }
