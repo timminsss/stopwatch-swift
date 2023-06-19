@@ -11,39 +11,54 @@ struct ContentView: View {
             Color.black
                 .edgesIgnoringSafeArea(.all)
             VStack(spacing: 10) {
-                Text("Stopwatch App ")
+                Text("Stopwatch & Timer")
                     .padding()
-                    .background(Color.mint)
-                    .cornerRadius(10)
-                    .font(.system(size: 24, weight: .bold))
+                    .font(.system(size: 32, weight: .bold))
+                    .foregroundColor(Color.white)
                 
                 Spacer()
                 
                 HStack {
-                    Button("Stopwatch") {
+                    Button {
                         showStopwatchView.toggle()
+                    } label: {
+                        VStack{
+                            Image(systemName: "stopwatch")
+                            Text("Stopwatch")
+                        }
                     }
                     .sheet(isPresented: $showStopwatchView) {
                         StopwatchView()
                     }
                     .padding()
                     .font(.headline)
+                    .frame(maxWidth: .infinity)
                     .background(Color.orange)
                     .cornerRadius(10)
                     .foregroundColor(.black)
                     
-                    Button("Timer") {
+                    Spacer().frame(maxWidth: 48)
+                    
+                    Button {
                         showTimerView.toggle()
+                    } label: {
+                        VStack {
+                            Image(systemName: "timer")
+                            Text("Timer")
+                        }
                     }
                     .sheet(isPresented: $showTimerView) {
                         TimerView()
                     }
                     .padding()
                     .font(.headline)
+                    .frame(maxWidth: .infinity)
                     .background(Color.red)
                     .cornerRadius(10)
                     .foregroundColor(.black)
                 }
+                .padding(48)
+                
                 Spacer()
             }
         }
