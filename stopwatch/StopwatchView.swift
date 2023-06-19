@@ -25,11 +25,11 @@ struct StopwatchView: View {
                     Image(systemName: "stopwatch")
                     Text("Stopwatch")
                 }
-                    .padding()
-                    .cornerRadius(10)
-                    .frame(maxWidth: .infinity, alignment: .top)
-                    .font(.system(size: 32, weight: .bold))
-                    .foregroundColor(Color.white)
+                .padding()
+                .cornerRadius(10)
+                .frame(maxWidth: .infinity, alignment: .top)
+                .font(.system(size: 32, weight: .bold))
+                .foregroundColor(Color.white)
                 
                 Spacer()
                 
@@ -52,11 +52,11 @@ struct StopwatchView: View {
                         Button {
                             runningTime = false
                         } label: {
-                            Text("Stop")
+                            Text("Pause")
                                 .padding()
                                 .font(.headline)
                                 .frame(maxWidth: .infinity)
-                                .background(Color.red)
+                                .background(Color.orange)
                                 .cornerRadius(10)
                                 .foregroundColor(.black)
                         }
@@ -83,7 +83,7 @@ struct StopwatchView: View {
                                 .padding()
                                 .font(.headline)
                                 .frame(maxWidth: .infinity)
-                                .background(Color.orange)
+                                .background(Color.teal)
                                 .cornerRadius(10)
                                 .foregroundColor(.black)
                         }
@@ -158,6 +158,6 @@ struct StopwatchView: View {
 struct StopwatchView_Previews: PreviewProvider {
     static var previews: some View {
         StopwatchView()
-            
+        
     }
 }
