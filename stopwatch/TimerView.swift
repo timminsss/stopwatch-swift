@@ -10,6 +10,7 @@ struct TimerView: View {
     @State private var pickerSeconds = 0
     // Need to convert the picker mins and secs to time interval
     @State private var timeRemaining: TimeInterval = 0
+    @State private var timesUpAlert = false
     
     // Same as stopwatch - publishes each second
     let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
@@ -34,8 +35,9 @@ struct TimerView: View {
                     .onReceive(timer) { _ in
                         if runningTime && timeRemaining > 0 {
                             timeRemaining -= 1
-                        } else {
+                        } else if runningTime && timeRemaining == 0 {
                             runningTime = false
+                            timesUpAlert = true
                         }
                     }
                     .padding()
@@ -194,6 +196,17 @@ struct TimerView: View {
                 .font(.headline)
                 
             }
+        }
+        .alert(isPresented: $timesUpAlert) {
+            Alert(
+                title: Text("Timer"),
+                message: Text("The timer has ended"),
+                dismissButton: .default(Text("OK"),
+                                        action: {
+                                            timesUpAlert = false
+                                        }
+                                       )
+            )
         }
     }
     
