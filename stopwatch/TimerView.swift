@@ -15,20 +15,30 @@ struct TimerView: View {
     // Same as stopwatch - publishes each second
     let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
     
+    // Set up array for buttons so can loop through
+    let buttonData: [(label: String, minutes: Int)] = [
+        ("1 min", 1),
+        ("5 min", 5),
+        ("10 min", 10)
+    ]
+    
     var body: some View {
         ZStack {
-            Color.white
+            Color.black
                 .edgesIgnoringSafeArea(.all)
             VStack {
-                Spacer().frame(height: 50)
+                Spacer().frame(height: 48)
+                HStack{
+                    Image(systemName: "timer")
+                    Text("Timer")
+                }
+                .padding()
+                .cornerRadius(10)
+                .frame(maxWidth: .infinity, alignment: .top)
+                .font(.system(size: 32, weight: .bold))
+                .foregroundColor(Color.white)
                 
-                Text("Timer")
-                    .padding()
-                    .background(Color.mint)
-                    .cornerRadius(10)
-                    .font(.system(size: 24, weight: .bold))
-                
-                Spacer().frame(height: 50)
+                Spacer()
                 
                 Text("\(formatTimeInterval(timeRemaining))")
                 // modifer that picks up any changes from a publisher
@@ -41,9 +51,8 @@ struct TimerView: View {
                         }
                     }
                     .padding()
-                    .font(.system(size: 40, weight: .bold))
-                
-                Spacer()
+                    .font(.system(size: 64))
+                    .foregroundColor(Color.white)
                 
                 // Picker to be able to select custom time
                 Form {
@@ -64,85 +73,28 @@ struct TimerView: View {
                     }
                     .frame(height: 100)
                 }
+                .scrollContentBackground(.hidden)
                 
-                // Update this later to loop through if possible through grid
                 Grid(horizontalSpacing: 24, verticalSpacing: 24) {
                     GridRow {
-                        Button {
-                            print("1 min")
-                            pickerMinutes = 1
-                            runningTime = true
-                        } label: {
-                            Text("1 min")
-                                .frame(width: 80, height: 80)
-                                .foregroundColor(Color.white)
-                                .background(Color.black)
-                                .clipShape(Circle())
-                        }
-                        Button {
-                            print("5 min")
-                            pickerMinutes = 5
-                            runningTime = true
-                        } label: {
-                            Text("5 min")
-                                .frame(width: 80, height: 80)
-                                .foregroundColor(Color.white)
-                                .background(Color.black)
-                                .clipShape(Circle())
-                        }
-                        Button {
-                            print("10 min")
-                            pickerMinutes = 10
-                            runningTime = true
-                        } label: {
-                            Text("10 min")
-                                .frame(width: 80, height: 80)
-                                .foregroundColor(Color.white)
-                                .background(Color.black)
-                                .clipShape(Circle())
-                        }
-                    }
-                    GridRow {
-                        Button {
-                            print("15 min")
-                            pickerMinutes = 15
-                            runningTime = true
-                        } label: {
-                            Text("15 min")
-                                .frame(width: 80, height: 80)
-                                .foregroundColor(Color.white)
-                                .background(Color.black)
-                                .clipShape(Circle())
-                        }
-                        Button {
-                            print("20 min")
-                            pickerMinutes = 20
-                            runningTime = true
-                        } label: {
-                            Text("20 min")
-                                .frame(width: 80, height: 80)
-                                .foregroundColor(Color.white)
-                                .background(Color.black)
-                                .clipShape(Circle())
-                        }
-                        Button {
-                            print("30 min")
-                            pickerMinutes = 30
-                            runningTime = true
-                        } label: {
-                            Text("30 min")
-                                .frame(width: 80, height: 80)
-                                .foregroundColor(Color.white)
-                                .background(Color.black)
-                                .clipShape(Circle())
+                        ForEach(buttonData, id: \.label) { button in
+                            Button {
+                                pickerMinutes = button.minutes
+                                runningTime = true
+                            } label: {
+                                Text(button.label)
+                                    .frame(width: 80, height: 80)
+                                    .foregroundColor(Color.black)
+                                    .font(.headline)
+                                    .background(Color.white)
+                                    .clipShape(Circle())
+                            }
                         }
                     }
                 }
                 
-                
                 HStack {
                     Button {
-                        print("start")
                         // Update the timer to the converted time
                         timeRemaining = convertPickerTimesToTime(pickerMinutes, pickerSeconds)
                         runningTime = true
@@ -150,9 +102,10 @@ struct TimerView: View {
                         Text("Start")
                             .padding()
                             .font(.headline)
+                            .frame(maxWidth: .infinity)
                             .background(Color.green)
-                            .foregroundColor(.black)
                             .cornerRadius(10)
+                            .foregroundColor(.black)
                     }
                     //                    Might add this later
                     //                    Button {
@@ -166,6 +119,8 @@ struct TimerView: View {
                     //                            .foregroundColor(.black)
                     //                            .cornerRadius(10)
                     //                    }
+                    
+                    Spacer().frame(maxWidth: 48)
                     Button {
                         print("reset")
                         // Stop the timer and reset
@@ -177,20 +132,24 @@ struct TimerView: View {
                         Text("Reset")
                             .padding()
                             .font(.headline)
+                            .frame(maxWidth: .infinity)
                             .background(Color.red)
-                            .foregroundColor(.black)
                             .cornerRadius(10)
+                            .foregroundColor(.black)
                     }
                     
                 }
-                Button("Show Stopwatch View") {
+                .padding(48)
+                Button {
                     showStopwatchView.toggle()
+                } label: {
+                    Text("Go to")
+                    Image(systemName: "stopwatch")
                 }
                 .sheet(isPresented: $showStopwatchView) {
                     StopwatchView()
                 }
                 .padding()
-                .background(Color.teal)
                 .foregroundColor(Color.white)
                 .cornerRadius(10)
                 .font(.headline)
