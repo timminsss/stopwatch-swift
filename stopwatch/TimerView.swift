@@ -103,7 +103,7 @@ struct TimerView: View {
                         Button {
                             runningTime = false
                         } label: {
-                            Text("Stop")
+                            Text("Pause")
                                 .padding()
                                 .font(.headline)
                                 .frame(maxWidth: .infinity)
@@ -128,6 +128,7 @@ struct TimerView: View {
                                 .cornerRadius(10)
                                 .foregroundColor(.black)
                         }
+                        .disabled(pickerMinutes==0 && pickerSeconds==0)
                     }
                     Spacer().frame(maxWidth: 48)
                     Button {
