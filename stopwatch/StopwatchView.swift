@@ -7,6 +7,7 @@ struct StopwatchView: View {
     @State private var timeElapsed: TimeInterval = 0.0
     @State private var lapArray: [String] = []
     @State private var showTimerView = false
+    
     // on: is the scheduler for when this occurs
     // .main is the main loop scheduler - this updates the ui when changes happen
     // in: is the mode or quality of service level of priority/behaviour
@@ -16,17 +17,19 @@ struct StopwatchView: View {
     
     var body: some View {
         ZStack {
-            Color.white
+            Color.black
                 .edgesIgnoringSafeArea(.all)
             VStack {
-                Spacer().frame(height: 50)
+                Spacer().frame(height: 48)
                 Text("Stopwatch")
                     .padding()
-                    .background(Color.mint)
                     .cornerRadius(10)
                     .frame(maxWidth: .infinity, alignment: .top)
-                    .font(.system(size: 24, weight: .bold))
+                    .font(.system(size: 32, weight: .bold))
+                    .foregroundColor(Color.white)
+                
                 Spacer()
+                
                 Text(formatTimeInterval(timeElapsed))
                 // modifer that picks up any changes from a publisher
                     .onReceive(timer) { _ in
@@ -35,14 +38,15 @@ struct StopwatchView: View {
                         }
                     }
                     .padding()
-                    .font(.system(size: 40, weight: .bold))
+                    .font(.system(size: 64))
+                    .foregroundColor(Color.white)
+                
                 Spacer()
+                
                 HStack {
                     Spacer()
                     if runningTime {
                         Button {
-                            // Pause the timeElapsed
-                            print("stop")
                             runningTime = false
                         } label: {
                             Text("Stop")
@@ -51,11 +55,10 @@ struct StopwatchView: View {
                                 .background(Color.red)
                                 .foregroundColor(.black)
                                 .cornerRadius(10)
+                                .frame(maxWidth: .infinity)
                         }
                     } else {
                         Button {
-                            print("start")
-                            // Start the timeElapsed
                             runningTime = true
                         } label: {
                             Text("Start")
@@ -64,16 +67,14 @@ struct StopwatchView: View {
                                 .background(Color.green)
                                 .foregroundColor(.black)
                                 .cornerRadius(10)
+                                .frame(maxWidth: .infinity)
                         }
                     }
-                    Spacer()
+                    Spacer().frame(maxWidth: 48)
                     if runningTime {
                         Button {
-                            print("lap")
-                            // save the exact time when pressed and add to lap array
                             let lapTime = formatTimeInterval(timeElapsed)
                             lapArray.append(lapTime)
-                            // show time with lap number under
                         } label: {
                             Text("Lap")
                                 .padding()
@@ -81,12 +82,10 @@ struct StopwatchView: View {
                                 .background(Color.orange)
                                 .foregroundColor(.black)
                                 .cornerRadius(10)
+                                .frame(maxWidth: .infinity)
                         }
                     } else {
                         Button {
-                            print("reset")
-                            // Stop the timeElapsed
-                            // Set stopwatch back to 0
                             timeElapsed = 0.0
                             lapArray = []
                         } label: {
@@ -96,14 +95,15 @@ struct StopwatchView: View {
                                 .background(Color.red)
                                 .foregroundColor(.black)
                                 .cornerRadius(10)
+                                .frame(maxWidth: .infinity)
                         }
                     }
-                    Spacer()
                 }
-                .padding(.bottom, 10)
+                .padding(24)
                 
-                List {
-                    // need to add enumerated() to allow access to the index
+                // Using ScrollView and not List as the black background doesn't work when the list begins empty before loop
+                ScrollView {
+                    // Need to add enumerated() to allow access to the index
                     ForEach(Array(lapArray.enumerated()), id: \.1) { index, lap in
                         HStack {
                             Spacer()
@@ -112,17 +112,26 @@ struct StopwatchView: View {
                             Text(lap)
                             Spacer()
                         }
+                        .padding(12)
+                        .background(Color.white)
+                        .cornerRadius(10)
+                        .foregroundColor(.black)
+                        .padding(.horizontal)
                     }
                 }
+                .background(Color.black)
+                .foregroundColor(Color.white)
                 
-                Button("Show Timer View") {
+                Button {
                     showTimerView.toggle()
+                } label: {
+                    Text("Go to")
+                    Image(systemName: "timer")
                 }
                 .sheet(isPresented: $showTimerView) {
                     TimerView()
                 }
                 .padding()
-                .background(Color.teal)
                 .foregroundColor(Color.white)
                 .cornerRadius(10)
                 .font(.headline)
@@ -130,23 +139,22 @@ struct StopwatchView: View {
         }
     }
     
-    // using the _ means you don't have to name the parameter when you call it
+    // Using the _ means you don't have to name the parameter when you call it
     func formatTimeInterval(_ interval: TimeInterval) -> String {
-        // formatter doesn't suppoer ms so need to calc manually
-        // can't use % on decimals so need truncatingRemainder
+        // Formatter doesn't support ms so need to calc manually
+        // Can't use % on decimals so need truncatingRemainder
         let milliseconds = Int((interval.truncatingRemainder(dividingBy: 1)) * 100)
         let formatter = DateComponentsFormatter()
         formatter.allowedUnits = [.hour, .minute, .second]
-        // adds leading zeros so the format is consistent
+        // Adds leading zeros so the format is consistent
         formatter.zeroFormattingBehavior = .pad
-        
-        // return the time plus manually calc ms
-        return formatter.string(from: interval)! + String(format: ":%02d", milliseconds)
+        return formatter.string(from: interval)! + String(format: ".%02d", milliseconds)
     }
 }
 
 struct StopwatchView_Previews: PreviewProvider {
     static var previews: some View {
         StopwatchView()
+            
     }
 }

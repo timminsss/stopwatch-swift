@@ -20,7 +20,7 @@ struct TimerView: View {
             Color.white
                 .edgesIgnoringSafeArea(.all)
             VStack {
-                Spacer().frame(height: 50)
+                Spacer().frame(height: 48)
                 
                 Text("Timer")
                     .padding()
