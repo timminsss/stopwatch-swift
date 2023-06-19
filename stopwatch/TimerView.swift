@@ -5,6 +5,8 @@ struct TimerView: View {
     // @State allows us to update the property and UI is updated whenever the state changes
     @State private var showStopwatchView = false
     @State private var runningTime = false
+    // Need this to monitor Start button from start or from pause
+    @State private var timerStarted = false
     // Updated from the picker or from buttons
     @State private var pickerMinutes = 0
     @State private var pickerSeconds = 0
@@ -47,6 +49,7 @@ struct TimerView: View {
                             timeRemaining -= 1
                         } else if runningTime && timeRemaining == 0 {
                             runningTime = false
+                            timerStarted = false
                             timesUpAlert = true
                         }
                     }
@@ -74,13 +77,13 @@ struct TimerView: View {
                     .frame(height: 100)
                 }
                 .scrollContentBackground(.hidden)
+                .disabled(timerStarted)
                 
                 Grid(horizontalSpacing: 24, verticalSpacing: 24) {
                     GridRow {
                         ForEach(buttonData, id: \.label) { button in
                             Button {
                                 pickerMinutes = button.minutes
-                                runningTime = true
                             } label: {
                                 Text(button.label)
                                     .frame(width: 80, height: 80)
@@ -89,45 +92,51 @@ struct TimerView: View {
                                     .background(Color.white)
                                     .clipShape(Circle())
                             }
+                            // Want to disable buttons when timer started until reset
+                            .disabled(timerStarted)
                         }
                     }
                 }
                 
                 HStack {
-                    Button {
-                        // Update the timer to the converted time
-                        timeRemaining = convertPickerTimesToTime(pickerMinutes, pickerSeconds)
-                        runningTime = true
-                    } label: {
-                        Text("Start")
-                            .padding()
-                            .font(.headline)
-                            .frame(maxWidth: .infinity)
-                            .background(Color.green)
-                            .cornerRadius(10)
-                            .foregroundColor(.black)
+                    if runningTime {
+                        Button {
+                            runningTime = false
+                        } label: {
+                            Text("Stop")
+                                .padding()
+                                .font(.headline)
+                                .frame(maxWidth: .infinity)
+                                .background(Color.orange)
+                                .cornerRadius(10)
+                                .foregroundColor(.black)
+                        }
+                    } else {
+                        Button {
+                            // Update the timer to the converted time
+                            if !timerStarted {
+                                timeRemaining = convertPickerTimesToTime(pickerMinutes, pickerSeconds)
+                            }
+                            runningTime = true
+                            timerStarted = true
+                        } label: {
+                            Text("Start")
+                                .padding()
+                                .font(.headline)
+                                .frame(maxWidth: .infinity)
+                                .background(Color.green)
+                                .cornerRadius(10)
+                                .foregroundColor(.black)
+                        }
                     }
-                    //                    Might add this later
-                    //                    Button {
-                    //                        print("pause")
-                    //                        runningTime = false
-                    //                    } label: {
-                    //                        Text("Pause")
-                    //                            .padding()
-                    //                            .font(.headline)
-                    //                            .background(Color.green)
-                    //                            .foregroundColor(.black)
-                    //                            .cornerRadius(10)
-                    //                    }
-                    
                     Spacer().frame(maxWidth: 48)
                     Button {
-                        print("reset")
                         // Stop the timer and reset
                         timeRemaining = 0
                         pickerMinutes = 0
                         pickerSeconds = 0
                         runningTime = false
+                        timerStarted = false
                     } label: {
                         Text("Reset")
                             .padding()
