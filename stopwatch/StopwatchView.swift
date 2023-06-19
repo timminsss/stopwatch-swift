@@ -21,7 +21,10 @@ struct StopwatchView: View {
                 .edgesIgnoringSafeArea(.all)
             VStack {
                 Spacer().frame(height: 48)
-                Text("Stopwatch")
+                HStack{
+                    Image(systemName: "stopwatch")
+                    Text("Stopwatch")
+                }
                     .padding()
                     .cornerRadius(10)
                     .frame(maxWidth: .infinity, alignment: .top)
@@ -52,10 +55,10 @@ struct StopwatchView: View {
                             Text("Stop")
                                 .padding()
                                 .font(.headline)
-                                .background(Color.red)
-                                .foregroundColor(.black)
-                                .cornerRadius(10)
                                 .frame(maxWidth: .infinity)
+                                .background(Color.red)
+                                .cornerRadius(10)
+                                .foregroundColor(.black)
                         }
                     } else {
                         Button {
@@ -64,10 +67,10 @@ struct StopwatchView: View {
                             Text("Start")
                                 .padding()
                                 .font(.headline)
-                                .background(Color.green)
-                                .foregroundColor(.black)
-                                .cornerRadius(10)
                                 .frame(maxWidth: .infinity)
+                                .background(Color.green)
+                                .cornerRadius(10)
+                                .foregroundColor(.black)
                         }
                     }
                     Spacer().frame(maxWidth: 48)
@@ -79,10 +82,10 @@ struct StopwatchView: View {
                             Text("Lap")
                                 .padding()
                                 .font(.headline)
-                                .background(Color.orange)
-                                .foregroundColor(.black)
-                                .cornerRadius(10)
                                 .frame(maxWidth: .infinity)
+                                .background(Color.orange)
+                                .cornerRadius(10)
+                                .foregroundColor(.black)
                         }
                     } else {
                         Button {
@@ -92,14 +95,14 @@ struct StopwatchView: View {
                             Text("Reset")
                                 .padding()
                                 .font(.headline)
-                                .background(Color.red)
-                                .foregroundColor(.black)
-                                .cornerRadius(10)
                                 .frame(maxWidth: .infinity)
+                                .background(Color.red)
+                                .cornerRadius(10)
+                                .foregroundColor(.black)
                         }
                     }
                 }
-                .padding(24)
+                .padding(48)
                 
                 // Using ScrollView and not List as the black background doesn't work when the list begins empty before loop
                 ScrollView {
